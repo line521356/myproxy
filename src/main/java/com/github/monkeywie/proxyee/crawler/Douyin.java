@@ -21,6 +21,8 @@ import io.netty.handler.codec.http.HttpResponse;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Douyin {
 
@@ -46,19 +48,14 @@ public class Douyin {
 
                             @Override
                             public boolean match(HttpRequest httpRequest, HttpResponse httpResponse, HttpProxyInterceptPipeline pipeline) {
+                                List<String> models = new ArrayList<>();
                                 //喜欢
-                                String model1 = "/aweme/v1/aweme/favorite/";
-
-                                String [] models = {
-                                        //喜欢
-                                        "/aweme/v1/aweme/favorite/",
-                                        //评论
-                                        ""
-                                };
+                                models.add("/aweme/v1/aweme/favorite/");
                                 String uri = pipeline.getHttpRequest().uri();
-
-                                if(uri.contains(model1)){
-                                    return true;
+                                for (String model : models) {
+                                    if(uri.contains(model)){
+                                        return true;
+                                    }
                                 }
                                 return false;
                             }
