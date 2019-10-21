@@ -19,6 +19,8 @@ import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -27,11 +29,15 @@ import java.util.List;
 public class Douyin {
 
     public static void main(String[] args) {
+        //启动代理服务线程
         new Thread(Douyin::proxyFun).start();
         //这个数字是下载线程数量，数字越大下载越快，最小得1
         int count = 1;
         for (int i = 0; i < count; i++) {
             new Thread(DownloadDouyinVideo::downloadFun).start();
+        }
+        for (int i = 0; i < 100; i++) {
+            System.out.println("启动成功");
         }
     }
 
@@ -60,8 +66,7 @@ public class Douyin {
                                 return false;
                             }
 
-                            @Override
-                            public void handelResponse(HttpRequest httpRequest, FullHttpResponse httpResponse, HttpProxyInterceptPipeline pipeline) {
+                            private void video(FullHttpResponse httpResponse){
                                 String content = httpResponse.content().toString(Charset.defaultCharset());
                                 JSONObject json = JSONObject.parseObject(content);
                                 System.out.println(json);
@@ -71,21 +76,27 @@ public class Douyin {
                                     String id = aweme.getString("aweme_id");
                                     String desc = aweme.getString("desc");
                                     String url = null;
+                                    String starCount = null;
+                                    String commentCount = null;
+                                    String toOtherCount = null;
                                     try {
                                         url = aweme.getJSONObject("video").getJSONObject("play_addr").getJSONArray("url_list").get(0).toString();
                                     }catch (Exception e){
                                         continue;
                                     }
                                     RedisUtil.getRedisUtil().lpush("douyin_url",id+"###"+url);
-                                    String result = id + "," + desc + "," + url;
+                                    String result = id + "," + url + "," + desc + "," + starCount + "," + commentCount + "," + toOtherCount;
                                     try {
-                                        FileUtil.writeLine(result);
+                                        FileUtil.writeLine(result,"video");
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
                                 }
+                            }
 
-
+                            @Override
+                            public void handelResponse(HttpRequest httpRequest, FullHttpResponse httpResponse, HttpProxyInterceptPipeline pipeline) {
+                                video(httpResponse);
                             }
                         });
                     }

@@ -3,10 +3,7 @@ package com.github.monkeywie.proxyee.download;
 import com.github.monkeywie.proxyee.util.DownloadUtil;
 import com.github.monkeywie.proxyee.util.RedisUtil;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -49,6 +46,10 @@ public class DownloadDouyinVideo {
     }
 
     public static void downloadFun(){
+        File file = new File("D:\\douyin\\video\\");
+        if(!file.exists()){
+            file.mkdir();
+        }
         while (true) {
             String result = RedisUtil.getRedisUtil().rpop("douyin_url");
             if (result == null) {
