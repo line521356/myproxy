@@ -48,22 +48,31 @@ public class DownloadDouyinVideo {
         }
     }
 
-    public static void main(String[] args) {
-        while (true){
+    public static void downloadFun(){
+        while (true) {
             String result = RedisUtil.getRedisUtil().rpop("douyin_url");
-            if(result == null){
+            if (result == null) {
+                try {
+                    Thread.sleep(10*1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 continue;
             }
-            String [] results = result.split("###");
+            String[] results = result.split("###");
             String videoUrl = results[1];
             String id = results[0];
-            String saveFile = "D:\\douyin\\video\\" + id +".mp4";
+            String saveFile = "D:\\douyin\\video\\" + id + ".mp4";
             try {
                 System.out.println("正在下载：" + videoUrl);
-                httpDownload(videoUrl,saveFile);
-            }catch (Exception e){
+                httpDownload(videoUrl, saveFile);
+            } catch (Exception e) {
                 continue;
             }
         }
+    }
+
+    public static void main(String[] args) {
+        downloadFun();
     }
 }

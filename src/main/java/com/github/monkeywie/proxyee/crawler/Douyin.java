@@ -2,6 +2,7 @@ package com.github.monkeywie.proxyee.crawler;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.monkeywie.proxyee.download.DownloadDouyinVideo;
 import com.github.monkeywie.proxyee.intercept.HttpProxyInterceptInitializer;
 import com.github.monkeywie.proxyee.intercept.HttpProxyInterceptPipeline;
 import com.github.monkeywie.proxyee.intercept.common.CertDownIntercept;
@@ -24,6 +25,15 @@ import java.nio.charset.Charset;
 public class Douyin {
 
     public static void main(String[] args) {
+        new Thread(Douyin::proxyFun).start();
+        //这个数字是下载线程数量，数字越大下载越快，最小得1
+        int count = 1;
+        for (int i = 0; i < count; i++) {
+            new Thread(DownloadDouyinVideo::downloadFun).start();
+        }
+    }
+
+    public static void proxyFun(){
         HttpProxyServerConfig config = new HttpProxyServerConfig();
         config.setHandleSsl(true);
         new HttpProxyServer()
@@ -36,10 +46,18 @@ public class Douyin {
 
                             @Override
                             public boolean match(HttpRequest httpRequest, HttpResponse httpResponse, HttpProxyInterceptPipeline pipeline) {
+                                //喜欢
                                 String model1 = "/aweme/v1/aweme/favorite/";
-                                String model2 = "aweme/v1/feed";
+
+                                String [] models = {
+                                        //喜欢
+                                        "/aweme/v1/aweme/favorite/",
+                                        //评论
+                                        ""
+                                };
                                 String uri = pipeline.getHttpRequest().uri();
-                                if(uri.contains(model1)||uri.contains(model2)){
+
+                                if(uri.contains(model1)){
                                     return true;
                                 }
                                 return false;
@@ -77,4 +95,5 @@ public class Douyin {
                 })
                 .start(9999);
     }
+
 }
