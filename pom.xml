@@ -88,11 +88,6 @@
       <artifactId>fastjson</artifactId>
       <version>1.2.61</version>
     </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>1.2.3</version>
-    </dependency>
     <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
     <dependency>
       <groupId>redis.clients</groupId>
