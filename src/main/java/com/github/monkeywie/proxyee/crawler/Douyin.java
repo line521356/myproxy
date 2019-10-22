@@ -13,11 +13,13 @@ import com.github.monkeywie.proxyee.server.HttpProxyServerConfig;
 import com.github.monkeywie.proxyee.util.FileUtil;
 import com.github.monkeywie.proxyee.util.HttpUtil;
 import com.github.monkeywie.proxyee.util.RedisUtil;
+import com.sun.xml.internal.ws.util.StringUtils;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
+import io.netty.util.internal.StringUtil;
 
 import java.awt.*;
 import java.io.File;
@@ -66,6 +68,27 @@ public class Douyin {
                                 return false;
                             }
 
+                            private void comment(FullHttpResponse httpResponse){
+                                String content = httpResponse.content().toString(Charset.defaultCharset());
+                                JSONObject json = JSONObject.parseObject(content);
+                                System.out.println(json);
+                                JSONArray commentList = json.getJSONArray("comments");
+                                for (Object o : commentList) {
+                                    JSONObject comment = JSONObject.parseObject(o.toString());
+                                    String id = comment.getString("aweme_id");
+                                    String userId = comment.getJSONObject("user").getString("uid");
+                                    String userName = comment.getJSONObject("user").getString("nickname");
+                                    String commentStr = comment.getString("text");
+                                    String starCount = comment.getString("digg_count");
+                                    String result = id + "," + userId + "," + userName + "," + commentStr + "," + starCount;
+                                    try {
+                                        FileUtil.writeLine(result,"comment");
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
                             private void video(FullHttpResponse httpResponse){
                                 String content = httpResponse.content().toString(Charset.defaultCharset());
                                 JSONObject json = JSONObject.parseObject(content);
@@ -77,15 +100,13 @@ public class Douyin {
                                     String desc = aweme.getString("desc");
                                     String url = null;
                                     String starCount = null;
-                                    String commentCount = null;
-                                    String toOtherCount = null;
                                     try {
                                         url = aweme.getJSONObject("video").getJSONObject("play_addr").getJSONArray("url_list").get(0).toString();
                                     }catch (Exception e){
                                         continue;
                                     }
                                     RedisUtil.getRedisUtil().lpush("douyin_url",id+"###"+url);
-                                    String result = id + "," + url + "," + desc + "," + starCount + "," + commentCount + "," + toOtherCount;
+                                    String result = id + "," + url + "," + desc + "," + starCount;
                                     try {
                                         FileUtil.writeLine(result,"video");
                                     } catch (IOException e) {
@@ -96,7 +117,15 @@ public class Douyin {
 
                             @Override
                             public void handelResponse(HttpRequest httpRequest, FullHttpResponse httpResponse, HttpProxyInterceptPipeline pipeline) {
-                                video(httpResponse);
+                                String content = httpResponse.content().toString(Charset.defaultCharset());
+                                JSONObject json = JSONObject.parseObject(content);
+                                System.out.println(json);
+                                if(StringUtil.isNullOrEmpty(json.getString("aweme_list"))){
+                                    comment(httpResponse);
+                                }else{
+                                    video(httpResponse);
+                                }
+
                             }
                         });
                     }

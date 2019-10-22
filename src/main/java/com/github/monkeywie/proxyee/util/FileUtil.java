@@ -20,9 +20,9 @@ public class FileUtil {
         if(!flag){
             file.createNewFile();
             if(type.equals("video")){
-                randomFile.writeBytes("抖音id,视频链接.文案内容,点赞数量,评论数量,分享数量\r\n");
+                randomFile.writeBytes("视频id,视频链接.文案内容,点赞数量\r\n");
             }else if(type.equals("comment")){
-                randomFile.writeBytes("抖音id,用户id.用户名,评论内容,点赞数,回复数\r\n");
+                randomFile.writeBytes("视频id,用户id.用户名,评论内容,点赞数\r\n");
             }
 
         }
