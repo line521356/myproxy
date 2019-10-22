@@ -61,6 +61,7 @@ public class Douyin {
                                 List<String> models = new ArrayList<>();
                                 //喜欢
                                 models.add("/aweme/v1/aweme/favorite/");
+                                models.add("/aweme/v2/comment/list/");
                                 String uri = pipeline.getHttpRequest().uri();
                                 for (String model : models) {
                                     if(uri.contains(model)){
@@ -101,14 +102,17 @@ public class Douyin {
                                     String id = aweme.getString("aweme_id");
                                     String desc = aweme.getString("desc");
                                     String url = null;
-                                    String starCount = null;
+                                    String starCount = aweme.getJSONObject("statistics").getString("digg_count");
+                                    String commentCount = aweme.getJSONObject("statistics").getString("comment_count");
+                                    String shareCount = aweme.getJSONObject("statistics").getString("share_count");
+                                    String downloadCount = aweme.getJSONObject("statistics").getString("download_count");
                                     try {
                                         url = aweme.getJSONObject("video").getJSONObject("play_addr").getJSONArray("url_list").get(0).toString();
                                     }catch (Exception e){
                                         continue;
                                     }
                                     RedisUtil.getRedisUtil().lpush("douyin_url",id+"###"+url);
-                                    String result = id + "," + url + "," + desc + "," + starCount;
+                                    String result = id + "," + url + "," + desc + "," + starCount + "," +commentCount + "," + shareCount + "," +downloadCount;
                                     try {
                                         FileUtil.writeLine(result,"video");
                                     } catch (IOException e) {
