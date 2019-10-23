@@ -7,10 +7,10 @@ import com.lucius.proxyee.intercept.HttpProxyInterceptInitializer;
 import com.lucius.proxyee.intercept.HttpProxyInterceptPipeline;
 import com.lucius.proxyee.intercept.common.CertDownIntercept;
 import com.lucius.proxyee.intercept.common.FullResponseIntercept;
+import com.lucius.proxyee.queue.MyQueue;
 import com.lucius.proxyee.server.HttpProxyServer;
 import com.lucius.proxyee.server.HttpProxyServerConfig;
 import com.lucius.proxyee.util.FileUtil;
-import com.lucius.proxyee.util.RedisUtil;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
@@ -111,7 +111,7 @@ public class Douyin {
                                     }catch (Exception e){
                                         continue;
                                     }
-                                    RedisUtil.getRedisUtil().lpush("douyin_url",id+"###"+url);
+                                    MyQueue.push("douyin_url",id+"###"+url);
                                     String result = id + "," + url + "," + desc + "," + starCount + "," +commentCount + "," + shareCount + "," +downloadCount;
                                     try {
                                         FileUtil.writeLine(result,"video");

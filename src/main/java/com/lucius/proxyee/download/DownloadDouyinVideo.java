@@ -1,6 +1,6 @@
 package com.lucius.proxyee.download;
 
-import com.lucius.proxyee.util.RedisUtil;
+import com.lucius.proxyee.queue.MyQueue;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -50,7 +50,7 @@ public class DownloadDouyinVideo {
             file.mkdir();
         }
         while (true) {
-            String result = RedisUtil.getRedisUtil().rpop("douyin_url");
+            String result = MyQueue.pop("douyin_url");
             if (result == null) {
                 try {
                     Thread.sleep(10*1000);
