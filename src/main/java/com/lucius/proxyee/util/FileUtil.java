@@ -25,6 +25,7 @@ public class FileUtil {
                 randomFile.write("视频id,用户id,用户名,评论内容,点赞数\r\n".getBytes());
             }
 
+
         }
         long fileLength = randomFile.length();
         randomFile.seek(fileLength);

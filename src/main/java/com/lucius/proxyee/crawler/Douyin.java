@@ -71,17 +71,18 @@ public class Douyin {
                                 System.out.println(json);
                                 JSONArray commentList = json.getJSONArray("comments");
                                 for (Object o : commentList) {
-                                    JSONObject comment = JSONObject.parseObject(o.toString());
-                                    String id = comment.getString("aweme_id");
-                                    String userId = comment.getJSONObject("user").getString("uid");
-                                    String userName = comment.getJSONObject("user").getString("nickname");
-                                    String commentStr = comment.getString("text");
-                                    String starCount = comment.getString("digg_count");
-                                    String result = id + "," + userId + "," + userName + "," + commentStr + "," + starCount;
                                     try {
+                                        JSONObject comment = JSONObject.parseObject(o.toString());
+                                        String id = comment.getString("aweme_id");
+                                        String userId = comment.getJSONObject("user").getString("uid");
+                                        String userName = comment.getJSONObject("user").getString("nickname");
+                                        String commentStr = comment.getString("text");
+                                        String starCount = comment.getString("digg_count");
+                                        String result = id + "," + userId + "," + userName + "," + commentStr + "," + starCount;
                                         FileUtil.writeLine(result,"comment");
-                                    } catch (IOException e) {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
+                                        continue;
                                     }
                                 }
                             }
@@ -93,24 +94,20 @@ public class Douyin {
                                 JSONArray awemeList = json.getJSONArray("aweme_list");
                                 for (Object o : awemeList) {
                                     JSONObject aweme = JSONObject.parseObject(o.toString());
-                                    String id = aweme.getString("aweme_id");
-                                    String desc = aweme.getString("desc");
-                                    String url = null;
-                                    String starCount = aweme.getJSONObject("statistics").getString("digg_count");
-                                    String commentCount = aweme.getJSONObject("statistics").getString("comment_count");
-                                    String shareCount = aweme.getJSONObject("statistics").getString("share_count");
-                                    String downloadCount = aweme.getJSONObject("statistics").getString("download_count");
                                     try {
+                                        String id = aweme.getString("aweme_id");
+                                        String desc = aweme.getString("desc");
+                                        String url = null;
+                                        String starCount = aweme.getJSONObject("statistics").getString("digg_count");
+                                        String commentCount = aweme.getJSONObject("statistics").getString("comment_count");
+                                        String shareCount = aweme.getJSONObject("statistics").getString("share_count");
+                                        String downloadCount = aweme.getJSONObject("statistics").getString("download_count");
                                         url = aweme.getJSONObject("video").getJSONObject("play_addr").getJSONArray("url_list").get(0).toString();
+                                        MyQueue.push("douyin_url",id+"###"+url);
+                                        String result = id + "," + url + "," + desc + "," + starCount + "," +commentCount + "," + shareCount + "," +downloadCount;
+                                        FileUtil.writeLine(result,"video");
                                     }catch (Exception e){
                                         continue;
-                                    }
-                                    MyQueue.push("douyin_url",id+"###"+url);
-                                    String result = id + "," + url + "," + desc + "," + starCount + "," +commentCount + "," + shareCount + "," +downloadCount;
-                                    try {
-                                        FileUtil.writeLine(result,"video");
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
                                     }
                                 }
                             }
