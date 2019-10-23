@@ -21,14 +21,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 该项目可抓取抖音视频以及评论
- * 1.启动当前类
- * 2.手机连接代理，ip为本机ip，端口9999
- * 3.在手机操作抖音查看喜欢列表
- * 4.在手机查看评论列表
- * 5.进入D:/douyin目录下查看video下的视频，comment下查看评论列表，csv下查看视频文案信息
- */
 public class Douyin {
 
     public static void main(String[] args) {
