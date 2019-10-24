@@ -60,6 +60,20 @@ public class Douyin {
                                 return false;
                             }
 
+                            @Override
+                            public void handelResponse(HttpRequest httpRequest, FullHttpResponse httpResponse, HttpProxyInterceptPipeline pipeline) {
+                                String content = httpResponse.content().toString(Charset.defaultCharset());
+                                JSONObject json = JSONObject.parseObject(content);
+                                System.out.println(json);
+                                if(StringUtil.isNullOrEmpty(json.getString("aweme_list"))){
+                                    comment(httpResponse);
+                                }else{
+                                    video(httpResponse);
+                                }
+
+                            }
+
+
                             private void comment(FullHttpResponse httpResponse){
                                 String content = httpResponse.content().toString(Charset.defaultCharset());
                                 JSONObject json = JSONObject.parseObject(content);
@@ -109,18 +123,7 @@ public class Douyin {
                                 }
                             }
 
-                            @Override
-                            public void handelResponse(HttpRequest httpRequest, FullHttpResponse httpResponse, HttpProxyInterceptPipeline pipeline) {
-                                String content = httpResponse.content().toString(Charset.defaultCharset());
-                                JSONObject json = JSONObject.parseObject(content);
-                                System.out.println(json);
-                                if(StringUtil.isNullOrEmpty(json.getString("aweme_list"))){
-                                    comment(httpResponse);
-                                }else{
-                                    video(httpResponse);
-                                }
 
-                            }
                         });
                     }
                 })
