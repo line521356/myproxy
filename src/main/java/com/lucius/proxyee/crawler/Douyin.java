@@ -49,6 +49,7 @@ public class Douyin {
                                 List<String> models = new ArrayList<>();
                                 //喜欢
                                 models.add("/aweme/v1/aweme/favorite/");
+                                //评论
                                 models.add("/aweme/v2/comment/list/");
                                 String uri = pipeline.getHttpRequest().uri();
                                 for (String model : models) {
@@ -75,6 +76,7 @@ public class Douyin {
                                         String result = id + "," + userId + "," + userName + "," + commentStr + "," + starCount;
                                         FileUtil.writeLine(result,"comment");
                                     } catch (Exception e) {
+                                        //一个字段抓不到 这条数据我就不要了
                                         e.printStackTrace();
                                         continue;
                                     }
@@ -101,6 +103,7 @@ public class Douyin {
                                         String result = id + "," + url + "," + desc + "," + starCount + "," +commentCount + "," + shareCount + "," +downloadCount;
                                         FileUtil.writeLine(result,"video");
                                     }catch (Exception e){
+                                        //一个字段抓不到 这条数据我就不要了
                                         continue;
                                     }
                                 }
