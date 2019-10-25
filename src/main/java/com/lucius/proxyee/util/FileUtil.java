@@ -22,8 +22,9 @@ public class FileUtil {
                     firstLine = "视频id,视频链接,文案内容,点赞数量,评论数量,分享数量,下载数量\r\n";
                 } else if (type.equals("comment")) {
                     firstLine = "\"视频id,用户id,用户名,评论内容,点赞数\r\n\"";
+                }else{
+                    throw new IOException("见了鬼了");
                 }
-                assert firstLine != null;
                 FileUtils.openOutputStream(file, true).write(firstLine.getBytes());
             }
             FileUtils.openOutputStream(file, true).write(text.getBytes());
