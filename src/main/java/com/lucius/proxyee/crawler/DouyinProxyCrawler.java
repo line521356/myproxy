@@ -16,16 +16,15 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.util.internal.StringUtil;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Douyin {
+public class DouyinProxyCrawler {
 
     public static void main(String[] args) {
         //启动代理服务线程
-        new Thread(Douyin::proxyFun).start();
+        new Thread(DouyinProxyCrawler::proxyFun).start();
         //这个数字是下载线程数量，数字越大下载越快，最小得1
         int count = 1;
         for (int i = 0; i < count; i++) {

@@ -114,7 +114,7 @@
               <archive>
                 <manifest>
                   <!--这里指定要运行的main类-->
-                  <mainClass>com.lucius.proxyee.crawler.Douyin</mainClass>
+                  <mainClass>com.lucius.proxyee.crawler.DouyinProxyCrawler</mainClass>
                 </manifest>
               </archive>
               <descriptorRefs>
