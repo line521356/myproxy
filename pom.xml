@@ -4,20 +4,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.lucius</groupId>
-  <artifactId>proxyee</artifactId>
+  <artifactId>myproxy</artifactId>
   <version>1.0.4</version>
   <packaging>jar</packaging>
 
-  <name>proxyee</name>
+  <name>myproxy</name>
   <description>HTTP proxy server,support HTTPS and websocket.MITM impl,intercept and tamper HTTPS traffic.</description>
   <url>https://github.com/line521356/myproxy.git</url>
-
-  <licenses>
-    <license>
-      <name>The MIT License (MIT)</name>
-      <url>http://opensource.org/licenses/mit-license.php</url>
-    </license>
-  </licenses>
 
   <developers>
     <developer>
@@ -79,8 +72,8 @@
         <configuration>
           <archive>
             <manifest>
-              <!--<mainClass>com.lucius.proxyee.crawler.Tiktok</mainClass>-->
-              <mainClass>com.lucius.proxyee.crawler.Douyin</mainClass>
+              <mainClass>com.lucius.proxyee.crawler.Tiktok</mainClass>
+              <!--<mainClass>com.lucius.proxyee.crawler.Douyin</mainClass>-->
             </manifest>
           </archive>
           <descriptorRefs>
