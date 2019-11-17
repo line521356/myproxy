@@ -77,7 +77,6 @@ public class Douyin {
                             public void handelResponse(HttpRequest httpRequest, FullHttpResponse httpResponse, HttpProxyInterceptPipeline pipeline) {
                                 String content = httpResponse.content().toString(Charset.defaultCharset());
                                 JSONObject json = JSONObject.parseObject(content);
-                                System.out.println(json);
                                 if(StringUtil.isNullOrEmpty(json.getString("aweme_list"))){
                                     comment(httpResponse);
                                 }else{
@@ -90,7 +89,6 @@ public class Douyin {
                             private void comment(FullHttpResponse httpResponse){
                                 String content = httpResponse.content().toString(Charset.defaultCharset());
                                 JSONObject json = JSONObject.parseObject(content);
-                                System.out.println(json);
                                 JSONArray commentList = json.getJSONArray("comments");
                                 for (Object o : commentList) {
                                     try {
@@ -113,7 +111,6 @@ public class Douyin {
                             private void video(FullHttpResponse httpResponse){
                                 String content = httpResponse.content().toString(Charset.defaultCharset());
                                 JSONObject json = JSONObject.parseObject(content);
-                                System.out.println(json);
                                 JSONArray awemeList = json.getJSONArray("aweme_list");
                                 for (Object o : awemeList) {
                                     JSONObject aweme = JSONObject.parseObject(o.toString());

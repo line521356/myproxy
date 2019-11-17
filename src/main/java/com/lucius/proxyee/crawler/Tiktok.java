@@ -61,7 +61,7 @@ public class Tiktok {
                                     uri = uri.replace("mcc_mnc=46000","mcc_mnc=45418");
                                     uri = uri.replace("carrier_region=CN","carrier_region=HK");
                                     httpRequest.setUri(uri);
-                                    System.out.println(uri);
+
                                 }
                                 //转到下一个拦截器处理
                                 pipeline.beforeRequest(clientChannel, httpRequest);
@@ -90,7 +90,6 @@ public class Tiktok {
                             private void video(FullHttpResponse httpResponse){
                                 String content = httpResponse.content().toString(Charset.defaultCharset());
                                 JSONObject json = JSONObject.parseObject(content);
-                                System.out.println(json);
                                 JSONArray awemeList = json.getJSONArray("aweme_list");
                                 for (Object o : awemeList) {
                                     JSONObject aweme = JSONObject.parseObject(o.toString());
@@ -116,9 +115,7 @@ public class Tiktok {
                             public void handelResponse(HttpRequest httpRequest, FullHttpResponse httpResponse, HttpProxyInterceptPipeline pipeline) {
                                 String content = httpResponse.content().toString(Charset.defaultCharset());
                                 JSONObject json = JSONObject.parseObject(content);
-                                System.out.println(json);
                                 video(httpResponse);
-
 
                             }
                         });
