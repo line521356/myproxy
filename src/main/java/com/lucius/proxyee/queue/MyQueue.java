@@ -2,31 +2,44 @@ package com.lucius.proxyee.queue;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MyQueue {
 
     private static ConcurrentHashMap<String,ConcurrentLinkedQueue<String>>  queueConcurrentHashMap = new ConcurrentHashMap<>();
 
+    private static ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+
+    private static Lock r = rwl.readLock();
+
+    private static Lock w = rwl.writeLock();
+
     public static void push(String key,String value){
-        ConcurrentLinkedQueue<String> queue = queueConcurrentHashMap.get(key);
-        if(queue == null){
-            synchronized (MyQueue.class){
-                queue = queueConcurrentHashMap.get(key);
-                if(queue == null){
-                    queue = new ConcurrentLinkedQueue<>();
-                    queueConcurrentHashMap.put(key,queue);
-                }
+        w.lock();
+        try {
+            ConcurrentLinkedQueue<String> queue = queueConcurrentHashMap.get(key);
+            if (queue == null) {
+                queue = new ConcurrentLinkedQueue<>();
+                queueConcurrentHashMap.put(key, queue);
             }
+            queue.offer(value);
+        }finally {
+            w.unlock();
         }
-        queue.offer(value);
     }
 
-    public static synchronized String pop(String key){
-        ConcurrentLinkedQueue<String> queue = queueConcurrentHashMap.get(key);
-        if (queue == null){
-            return null;
+    public static String pop(String key){
+        r.lock();
+        try {
+            ConcurrentLinkedQueue<String> queue = queueConcurrentHashMap.get(key);
+            if (queue == null) {
+                return null;
+            }
+            return queue.poll();
+        }finally {
+            r.unlock();
         }
-        return queue.poll();
     }
 
     public static Integer length(String key){

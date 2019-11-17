@@ -3,14 +3,14 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.github.monkeywie</groupId>
+  <groupId>com.lucius</groupId>
   <artifactId>proxyee</artifactId>
   <version>1.0.4</version>
   <packaging>jar</packaging>
 
   <name>proxyee</name>
   <description>HTTP proxy server,support HTTPS and websocket.MITM impl,intercept and tamper HTTPS traffic.</description>
-  <url>https://github.com/monkeyWie/proxyee</url>
+  <url>https://github.com/line521356/myproxy.git</url>
 
   <licenses>
     <license>
@@ -21,16 +21,10 @@
 
   <developers>
     <developer>
-      <name>monkeyWie</name>
-      <email>liwei2633@163.com</email>
+      <name>lucius</name>
+      <email>lucius.521356@gmail.com</email>
     </developer>
   </developers>
-
-  <scm>
-    <connection>scm:git:https://github.com/monkeyWie/proxyee.git</connection>
-    <developerConnection>scm:git:https://github.com/monkeyWie/proxyee.git</developerConnection>
-    <url>https://github.com/monkeyWie/proxyee</url>
-  </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

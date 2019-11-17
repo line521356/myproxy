@@ -53,17 +53,12 @@ public class Douyin {
                         pipeline.addLast(new CertDownIntercept());
                         pipeline.addLast(new FullResponseIntercept() {
 
-                            FileUtil fileUtil = new FileUtil("D:\\douyin\\csv\\");
-
                             @Override
                             public boolean match(HttpRequest httpRequest, HttpResponse httpResponse, HttpProxyInterceptPipeline pipeline) {
                                 List<String> models = new ArrayList<>();
                                 //喜欢
                                 models.add("/aweme/v1/aweme/favorite/");
-                                //评论
                                 models.add("/aweme/v2/comment/list/");
-                                //推送
-//                                models.add("/aweme/v1/feed");
                                 String uri = pipeline.getHttpRequest().uri();
                                 for (String model : models) {
                                     if(uri.contains(model)){
@@ -87,7 +82,7 @@ public class Douyin {
                                         String commentStr = comment.getString("text");
                                         String starCount = comment.getString("digg_count");
                                         String result = id + "," + userId + "," + userName + "," + commentStr + "," + starCount;
-                                        fileUtil.writeLine(result,"comment");
+                                        FileUtil.writeLine(result,"comment");
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                         continue;
@@ -113,7 +108,7 @@ public class Douyin {
                                         url = aweme.getJSONObject("video").getJSONObject("play_addr").getJSONArray("url_list").get(0).toString();
                                         MyQueue.push("douyin_url",id+"###"+url);
                                         String result = id + "," + url + "," + desc + "," + starCount + "," +commentCount + "," + shareCount + "," +downloadCount;
-                                        fileUtil.writeLine(result,"video");
+                                        FileUtil.writeLine(result,"video");
                                     }catch (Exception e){
                                         continue;
                                     }

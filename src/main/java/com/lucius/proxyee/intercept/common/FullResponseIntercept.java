@@ -48,7 +48,7 @@ public abstract class FullResponseIntercept extends HttpProxyIntercept {
 
   @Deprecated
   /**
-   * 剥离到工具类中了：{@link com.github.monkeywie.proxyee.util#isHtml(HttpRequest, HttpResponse)}
+   * 剥离到工具类中了：{@link com.lucius.proxyee.util#isHtml(HttpRequest, HttpResponse)}
    */
   protected boolean isHtml(HttpRequest httpRequest, HttpResponse httpResponse) {
     String accept = httpRequest.headers().get(HttpHeaderNames.ACCEPT);
