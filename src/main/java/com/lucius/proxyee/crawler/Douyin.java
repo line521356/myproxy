@@ -16,7 +16,6 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.util.internal.StringUtil;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +39,7 @@ public class Douyin {
         System.out.println("\033[1;33m***************************************************************************************************************************************************************************\033[33m");
         System.out.println("\033[1;33m***************************************************************************************************************************************************************************\033[33m");
         System.out.println("\033[1;31m请用手机连接代理开始刷抖音v3.5\033[31m");
+
     }
 
     public static void proxyFun(){
@@ -53,12 +53,17 @@ public class Douyin {
                         pipeline.addLast(new CertDownIntercept());
                         pipeline.addLast(new FullResponseIntercept() {
 
+                            FileUtil fileUtil = new FileUtil("D:\\douyin\\csv\\");
+
                             @Override
                             public boolean match(HttpRequest httpRequest, HttpResponse httpResponse, HttpProxyInterceptPipeline pipeline) {
                                 List<String> models = new ArrayList<>();
                                 //喜欢
                                 models.add("/aweme/v1/aweme/favorite/");
+                                //评论
                                 models.add("/aweme/v2/comment/list/");
+                                //推送
+//                                models.add("/aweme/v1/feed");
                                 String uri = pipeline.getHttpRequest().uri();
                                 for (String model : models) {
                                     if(uri.contains(model)){
@@ -67,6 +72,20 @@ public class Douyin {
                                 }
                                 return false;
                             }
+
+                            @Override
+                            public void handelResponse(HttpRequest httpRequest, FullHttpResponse httpResponse, HttpProxyInterceptPipeline pipeline) {
+                                String content = httpResponse.content().toString(Charset.defaultCharset());
+                                JSONObject json = JSONObject.parseObject(content);
+                                System.out.println(json);
+                                if(StringUtil.isNullOrEmpty(json.getString("aweme_list"))){
+                                    comment(httpResponse);
+                                }else{
+                                    video(httpResponse);
+                                }
+
+                            }
+
 
                             private void comment(FullHttpResponse httpResponse){
                                 String content = httpResponse.content().toString(Charset.defaultCharset());
@@ -82,8 +101,9 @@ public class Douyin {
                                         String commentStr = comment.getString("text");
                                         String starCount = comment.getString("digg_count");
                                         String result = id + "," + userId + "," + userName + "," + commentStr + "," + starCount;
-                                        FileUtil.writeLine(result,"comment");
+                                        fileUtil.writeLine(result,"comment");
                                     } catch (Exception e) {
+                                        //一个字段抓不到 这条数据我就不要了
                                         e.printStackTrace();
                                         continue;
                                     }
@@ -108,25 +128,15 @@ public class Douyin {
                                         url = aweme.getJSONObject("video").getJSONObject("play_addr").getJSONArray("url_list").get(0).toString();
                                         MyQueue.push("douyin_url",id+"###"+url);
                                         String result = id + "," + url + "," + desc + "," + starCount + "," +commentCount + "," + shareCount + "," +downloadCount;
-                                        FileUtil.writeLine(result,"video");
+                                        fileUtil.writeLine(result,"video");
                                     }catch (Exception e){
+                                        //一个字段抓不到 这条数据我就不要了
                                         continue;
                                     }
                                 }
                             }
 
-                            @Override
-                            public void handelResponse(HttpRequest httpRequest, FullHttpResponse httpResponse, HttpProxyInterceptPipeline pipeline) {
-                                String content = httpResponse.content().toString(Charset.defaultCharset());
-                                JSONObject json = JSONObject.parseObject(content);
-                                System.out.println(json);
-                                if(StringUtil.isNullOrEmpty(json.getString("aweme_list"))){
-                                    comment(httpResponse);
-                                }else{
-                                    video(httpResponse);
-                                }
 
-                            }
                         });
                     }
                 })
