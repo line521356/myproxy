@@ -9,7 +9,33 @@ import java.net.URLConnection;
 
 public class DownloadDouyinVideo {
 
-    public static boolean httpDownload(String httpUrl, String saveFile) {
+    private String videoLocalUrl;
+
+    private String key;
+
+
+    public DownloadDouyinVideo(String videoLocalUrl, String key) {
+        this.videoLocalUrl = videoLocalUrl;
+        this.key = key;
+    }
+
+    public String getVideoLocalUrl() {
+        return videoLocalUrl;
+    }
+
+    public void setVideoLocalUrl(String videoLocalUrl) {
+        this.videoLocalUrl = videoLocalUrl;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    private boolean httpDownload(String httpUrl, String saveFile) {
         // 1.下载网络文件
         int byteRead;
         URL url;
@@ -44,13 +70,13 @@ public class DownloadDouyinVideo {
         }
     }
 
-    public static void downloadFun(){
-        File file = new File("D:\\douyin\\video\\");
+    public void downloadFun(){
+        File file = new File(this.videoLocalUrl);
         if(!file.exists()){
             file.mkdir();
         }
         while (true) {
-            String result = MyQueue.pop("douyin_url");
+            String result = MyQueue.pop(key);
             if (result == null) {
                 try {
                     Thread.sleep(10*1000);
@@ -62,9 +88,10 @@ public class DownloadDouyinVideo {
             String[] results = result.split("###");
             String videoUrl = results[1];
             String id = results[0];
-            String saveFile = "D:\\douyin\\video\\" + id + ".mp4";
+            String saveFile = videoLocalUrl + id + ".mp4";
             try {
                 System.out.println("正在下载：" + videoUrl);
+                System.out.println("当前还剩下：" + MyQueue.length(key));
                 httpDownload(videoUrl, saveFile);
             } catch (Exception e) {
                 continue;
@@ -72,7 +99,4 @@ public class DownloadDouyinVideo {
         }
     }
 
-    public static void main(String[] args) {
-        downloadFun();
-    }
 }

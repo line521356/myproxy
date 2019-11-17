@@ -8,12 +8,27 @@ import java.time.format.DateTimeFormatter;
 
 public class FileUtil {
 
-    private final static String filePath = "D:\\douyin\\csv\\";
+    private String filePath;
 
     private final static String fileName = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "_douyin.csv";
 
+    public FileUtil(String filePath) {
+        this.filePath = filePath;
+    }
 
-    public static void writeLine(String text,String type) throws IOException {
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public static String getFileName() {
+        return fileName;
+    }
+
+    public void writeLine(String text, String type) throws IOException {
         File file = new File(filePath + type + fileName);
         boolean flag = file.exists();
         RandomAccessFile randomFile = new RandomAccessFile(file, "rw");

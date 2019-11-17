@@ -29,5 +29,9 @@ public class MyQueue {
         return queue.poll();
     }
 
+    public static Integer length(String key){
+        ConcurrentLinkedQueue<String> queue = queueConcurrentHashMap.get(key);
+        return queue.size();
+    }
 
 }
